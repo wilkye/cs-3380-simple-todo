@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/wilkye/cs-3380-simple-todo#readme",
   "dependencies": {
+    "fs": "^0.0.1-security",
     "inquirer": "^13.2.0"
   }
 }
