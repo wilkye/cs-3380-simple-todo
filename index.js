@@ -38,7 +38,9 @@ let readAndStore = () => {
         const dataArray = JSON.parse(jsonData);
         return dataArray;
     } catch (error) {
-        console.error('Error reading or parsing the JSON file:', error);
+        fs.promises.readFile(filePath, { encoding: 'utf-8' })
+            .then(() => console.log('File exists but there was an error reading or parsing:', error))
+            .catch((err) => console.log('No save found...'));
     }
 }
 
