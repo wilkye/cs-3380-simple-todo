@@ -29,6 +29,21 @@ let saveToJSON = () => {
     })
 };
 
-createTask("test");
-createTask("better test");
-saveToJSON();
+let readAndStore = () => {
+    const filePath = path.join(__dirname, jsonPath);
+
+    try {
+        const jsonData = fs.readFileSync(filePath, 'utf-8');
+
+        const dataArray = JSON.parse(jsonData);
+        return dataArray;
+    } catch (error) {
+        console.error('Error reading or parsing the JSON file:', error);
+    }
+}
+
+// createTask("test");
+// createTask("better test");
+tasks = readAndStore();
+console.log(tasks);
+// saveToJSON();
