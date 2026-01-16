@@ -1,4 +1,7 @@
+import inquirer from 'inquirer';
+
 const fs = require('fs');
+const { default: inquirer } = require('inquirer');
 const path = require('path');
 
 const jsonPath = "todos.json";
@@ -44,8 +47,31 @@ let readAndStore = () => {
     }
 }
 
+let displayTasks = () => {
+    for (let i = 0; i < tasks.length; i++) {
+        console.log(`${i + 1}. ${tasks[i].text} - is done ${tasks[i].completed}`);
+    }
+}
+
+
+
+let mainLoop = () => {
+    const outputArray = ["\nWould you like to:",
+        "(a) View To Do List",
+        "(b) Add items to list",
+        "(c) Check off an item",
+        "(d) Remove an item",
+        "(e) Quit",
+        "Enter a, b, c or d to continue:\n"]
+
+    for (let i = 0; i < outputArray.length; i++) {
+        console.log(`${outputArray[i]}`);
+    }
+}
+
 // createTask("test");
 // createTask("better test");
 tasks = readAndStore();
-console.log(tasks);
+mainLoop();
+// displayTasks();
 // saveToJSON();
