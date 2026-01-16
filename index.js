@@ -13,10 +13,23 @@ function Task(text) {
 }
 
 function createTask(text) {
-    const task1 = new Task(text);
-    tasks.push(task1);
+    const task = new Task(text);
+    tasks.push(task);
     console.log("Task Created.");
     console.log(tasks);
+    // Add support for multiple tasks to be created at once
+}
+
+let removeTask = (index) => {
+    const removedElement = tasks.splice(index - 1, 1);
+    console.log(`Successfully removed ${removedElement.text}`);
+    // Call main loop
+}
+
+let updateTask = (index) => {
+    tasks[index - 1].completed = !tasks[index].completed;
+    console.log(`Updated completion status of task ${index}`)
+    // Call main loop
 }
 
 let saveToJSON = () => {
@@ -49,11 +62,13 @@ let readAndStore = () => {
 
 let displayTasks = () => {
     for (let i = 0; i < tasks.length; i++) {
-        console.log(`${i + 1}. ${tasks[i].text} - is done ${tasks[i].completed}`);
+        if (tasks[i].completed === true) {
+            console.log(`${i + 1}. [X] ${tasks[i].text}`);
+        } else {
+            console.log(`${i + 1}. [ ] ${tasks[i].text}`);
+        }
     }
 }
-
-
 
 let mainLoop = () => {
     const outputArray = ["\nWould you like to:",
