@@ -12,11 +12,7 @@
     "completed": false
   },
   {
-    "text": "Beat Queen",
-    "completed": false
-  },
-  {
     "text": "Finish assignment",
-    "completed": false
+    "completed": true
   }
 ]

@@ -36,7 +36,7 @@ let removeTask = () => {
             message: "Enter the number of the task to remove:"
         }
     ]).then(answer => {
-        removeTask(Number(answer.number));
+        tasks.splice(Number(answer.number) - 1, 1);
         saveToJSON();
         mainLoop();
     });
@@ -55,10 +55,10 @@ let updateTask = () => {
         {
             type: "input",
             name: "number",
-            message: "Enter the number of the task you completed:"
+            message: "Enter the number of the task you want updated:"
         }
     ]).then(answer => {
-        updateTask(Number(answer.number));
+        tasks[Number(answer.number) - 1].completed = !tasks[Number(answer.number) - 1].completed;
         saveToJSON();
         mainLoop();
     });
@@ -120,7 +120,7 @@ let addTaskPrompt = () => {
 let mainLoop = () => {
     inquirer.prompt([
         {
-            type: "list",
+            type: "select",
             name: "choice",
             message: "Would you like to:",
             choices: [
@@ -158,8 +158,5 @@ let mainLoop = () => {
     });
 };
 
-// createTask("test");
-// createTask("better test");
 tasks = readAndStore();
 mainLoop();
-// saveToJSON();
