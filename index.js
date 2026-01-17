@@ -1,7 +1,10 @@
-// import inquirer from 'inquirer';
+import inquirer from 'inquirer';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const fs = require('fs');
-const path = require('path');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const jsonPath = "todos.json";
 let tasks = [];
@@ -21,19 +24,22 @@ function createTask(text) {
 
 let removeTask = (index) => {
     const removedElement = tasks.splice(index - 1, 1);
-    console.log(`Successfully removed ${removedElement.text}`);
+    console.log(`Successfully removed ${removedElement[0].text}`);
     // Call main loop
 }
 
 let updateTask = (index) => {
+    if (index < 1 || index > tasks.length) {
+        console.log("Invalid task number.");
+        return;
+    }
     tasks[index - 1].completed = !tasks[index - 1].completed;
-    console.log(`Updated completion status of task ${index}`)
-    // Call main loop
-}
+    console.log(`Updated completion status of task ${index}`);
+};
 
 let saveToJSON = () => {
     const filePath = path.join(__dirname, jsonPath);
-    jsonData = JSON.stringify(tasks, null, 2);
+    const jsonData = JSON.stringify(tasks, null, 2);
 
     fs.writeFile(filePath, jsonData, 'utf-8', (err) => {
         if (err) {
@@ -49,15 +55,12 @@ let readAndStore = () => {
 
     try {
         const jsonData = fs.readFileSync(filePath, 'utf-8');
-
-        const dataArray = JSON.parse(jsonData);
-        return dataArray;
+        return JSON.parse(jsonData);
     } catch (error) {
-        fs.promises.readFile(filePath, { encoding: 'utf-8' })
-            .then(() => console.log('File exists but there was an error reading or parsing:', error))
-            .catch(() => console.log('No save found...'));
+        console.log('No save found, starting with an empty list.');
+        return [];
     }
-}
+};
 
 let displayTasks = () => {
     for (let i = 0; i < tasks.length; i++) {
