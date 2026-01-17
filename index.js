@@ -18,23 +18,50 @@ function createTask(text) {
     const task = new Task(text);
     tasks.push(task);
     console.log("Task Created.");
-    console.log(tasks);
-    // Add support for multiple tasks to be created at once
 }
 
-let removeTask = (index) => {
-    const removedElement = tasks.splice(index - 1, 1);
-    console.log(`Successfully removed ${removedElement[0].text}`);
-    // Call main loop
-}
-
-let updateTask = (index) => {
-    if (index < 1 || index > tasks.length) {
-        console.log("Invalid task number.");
+let removeTask = () => {
+    if (tasks.length === 0) {
+        console.log("No tasks to remove.");
+        mainLoop();
         return;
     }
-    tasks[index - 1].completed = !tasks[index - 1].completed;
-    console.log(`Updated completion status of task ${index}`);
+
+    displayTasks();
+
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "number",
+            message: "Enter the number of the task to remove:"
+        }
+    ]).then(answer => {
+        removeTask(Number(answer.number));
+        saveToJSON();
+        mainLoop();
+    });
+};
+
+let updateTask = () => {
+    if (tasks.length === 0) {
+        console.log("No tasks to check off.");
+        mainLoop();
+        return;
+    }
+
+    displayTasks();
+
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "number",
+            message: "Enter the number of the task you completed:"
+        }
+    ]).then(answer => {
+        updateTask(Number(answer.number));
+        saveToJSON();
+        mainLoop();
+    });
 };
 
 let saveToJSON = () => {
@@ -46,7 +73,6 @@ let saveToJSON = () => {
             console.error('Error writing file:', err);
             return;
         }
-        console.log("File written successfully.");
     })
 };
 
@@ -70,26 +96,70 @@ let displayTasks = () => {
             console.log(`${i + 1}. [ ] ${tasks[i].text}`);
         }
     }
-}
+};
+
+let addTaskPrompt = () => {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "task",
+            message: 'Enter a task (type "done" to finish):'
+        }
+    ]).then(answer => {
+        if (answer.task.toLowerCase() === "done") {
+            saveToJSON();
+            mainLoop();
+            return;
+        }
+
+        createTask(answer.task);
+        addTaskPrompt();
+    });
+};
 
 let mainLoop = () => {
-    const outputArray = ["\nWould you like to:",
-        "(a) View To Do List",
-        "(b) Add items to list",
-        "(c) Check off an item",
-        "(d) Remove an item",
-        "(e) Quit",
-        "Enter a, b, c or d to continue:\n"]
+    inquirer.prompt([
+        {
+            type: "list",
+            name: "choice",
+            message: "Would you like to:",
+            choices: [
+                "View To Do List",
+                "Add items to list",
+                "Check off an item",
+                "Remove an item",
+                "Quit"
+            ]
+        }
+    ]).then(answer => {
+        switch (answer.choice) {
+            case "View To Do List":
+                displayTasks();
+                mainLoop();
+                break;
 
-    for (let i = 0; i < outputArray.length; i++) {
-        console.log(`${outputArray[i]}`);
-    }
-}
+            case "Add items to list":
+                addTaskPrompt();
+                break;
+
+            case "Check off an item":
+                updateTask();
+                break;
+
+            case "Remove an item":
+                removeTask();
+                break;
+
+            case "Quit":
+                console.log("Thanks for playing! Data saved.");
+                saveToJSON();
+                break;
+        }
+    });
+};
 
 // createTask("test");
 // createTask("better test");
 tasks = readAndStore();
-updateTask(2);
-displayTasks();
-// mainLoop();
+mainLoop();
 // saveToJSON();
