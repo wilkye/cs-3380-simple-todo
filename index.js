@@ -1,7 +1,6 @@
-import inquirer from 'inquirer';
+// import inquirer from 'inquirer';
 
 const fs = require('fs');
-const { default: inquirer } = require('inquirer');
 const path = require('path');
 
 const jsonPath = "todos.json";
@@ -27,7 +26,7 @@ let removeTask = (index) => {
 }
 
 let updateTask = (index) => {
-    tasks[index - 1].completed = !tasks[index].completed;
+    tasks[index - 1].completed = !tasks[index - 1].completed;
     console.log(`Updated completion status of task ${index}`)
     // Call main loop
 }
@@ -87,6 +86,7 @@ let mainLoop = () => {
 // createTask("test");
 // createTask("better test");
 tasks = readAndStore();
-mainLoop();
-// displayTasks();
+updateTask(2);
+displayTasks();
+// mainLoop();
 // saveToJSON();
